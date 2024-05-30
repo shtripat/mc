@@ -1028,7 +1028,7 @@ function test_bucket_replication() {
 			break
 		fi
 		assert_success "$start_time" "${FUNCNAME[0]}" mc_cmd cp "$FILE_0_B" "${SERVER_ALIAS}/${bkt1}/${object_name}"
-		sleep 5s # to make sure objects reflects
+		#sleep 5s # to make sure objects reflects
 		assert_success "$start_time" "${FUNCNAME[0]}" mc_cmd rm "${SERVER_ALIAS}/${bkt1}/${object_name}"
 		assert_failure "$start_time" "${FUNCNAME[0]}" mc_cmd stat "${SERVER_ALIAS}/${bkt1}/${object_name}"
 		loop_count=$((loop_count + 1))
@@ -1037,6 +1037,8 @@ function test_bucket_replication() {
 	diff -bB <(mc_cmd --json ls "${SERVER_ALIAS}/${bkt1}/${object_name}" | jq -r .key) <(mc_cmd --json ls "${SERVER_ALIAS}/${bkt2}/${object_name}" | jq -r .key) >/dev/null 2>&1
 	assert_success "$start_time" "${FUNCNAME[0]}" show_on_failure $? "replication list differs"
 
+	#mc_cmd rb "${SERVER_ALIAS}/${bkt1}" --force --dangerous
+	#mc_cmd rb "${SERVER_ALIAS}/${bkt2}" --force --dangerous
 	log_success "$start_time" "${FUNCNAME[0]}"
 }
 
